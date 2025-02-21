@@ -3,19 +3,55 @@ name: Local Docker Deploy
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:  # Permite ejecución manual desde la UI de GitHub
+
+env:
+  COMPOSE_PROJECT_NAME: inventarioptm  # Evita conflictos con otros proyectos
 
 jobs:
-  build-and-run:
-    runs-on: self-hosted # Ejecuta en tu propio servidor/local
+  deploy:
+    runs-on: self-hosted  # Ejecuta en tu propia máquina/servidor
+    timeout-minutes: 15    # Previene ejecuciones infinitas
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0     # Clona todo el historial de Git
 
-    - name: Build Docker image
-      run: docker build -t inventarioptm:latest .
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
 
-    - name: Deploy with Docker Compose
+    - name: Clean previous containers
       run: |
-        docker-compose down
-        docker-compose up -d
+        docker-compose -p $COMPOSE_PROJECT_NAME down \
+          --remove-orphans \
+          --volumes \
+          --rmi local \
+          || true  # Ignora errores si no hay contenedores
+
+    - name: Build and deploy
+      run: |
+        # Construir con cache limpia
+        docker-compose -p $COMPOSE_PROJECT_NAME build \
+          --no-cache \
+          --pull \
+          --progress plain
+        
+        # Iniciar servicios
+        docker-compose -p $COMPOSE_PROJECT_NAME up \
+          -d \
+          --force-recreate \
+          --always-recreate-deps
+        
+        # Verificar estado
+        sleep 10  # Esperar inicialización
+        docker-compose -p $COMPOSE_PROJECT_NAME ps
+        docker-compose -p $COMPOSE_PROJECT_NAME logs --tail=50
+
+    - name: Health check
+      run: |
+        # Verificar que la app responde
+        curl --retry 3 --retry-delay 10 --max-time 5 \
+          http://localhost:3000/api/health \
+          || (echo "Health check failed!" && exit 1)

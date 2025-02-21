@@ -114,7 +114,7 @@ export default function ProductCRUDPage() {
         }}
       >
         <Typography variant="h4" gutterBottom align="center">
-          Gestión de Inventarios de Productos de PTM
+          Gestión de Carlos Inventarios de Productos de PTM
         </Typography>
         <Image
           src="/Logo_COMERCIAL-CARD.png"
