@@ -8,13 +8,15 @@ import {
   Alert,
   AlertColor,
 } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { Add, Search } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 import axiosClient from "./axios/axiosClient";
 import ProductForm from "./components/ProductForm";
 import ProductTable from "./components/ProductTable";
 import { Product } from "./types";
 
 export default function ProductCRUDPage() {
+  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [orderBy, setOrderBy] = useState<keyof Product>("nombre");
@@ -44,7 +46,7 @@ export default function ProductCRUDPage() {
         );
         const productsWithNumberId = response.data.data.map((p) => ({
           ...p,
-          id: Number(p.id), // Convertir id a número
+          id: Number(p.id),
         }));
         setProducts(productsWithNumberId);
       } catch (error) {
@@ -88,21 +90,52 @@ export default function ProductCRUDPage() {
     }
   };
 
+  const totalInventario = products.reduce(
+    (sum, product) => sum + product.precio * product.cantidadStock,
+    0
+  );
+  const productoMayorValor = products.reduce(
+    (max, product) =>
+      product.precio * product.cantidadStock > max.precio * max.cantidadStock
+        ? product
+        : max,
+    products[0] || { nombre: "N/A", precio: 0, cantidadStock: 0 }
+  );
+
   return (
     <Box sx={{ p: 3, maxWidth: 1200, margin: "0 auto" }}>
-      <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
-        Gestión de Productos de PTM
+      <Typography variant="h4" gutterBottom sx={{ mb: 4 }} align="center">
+        Gestión de Inventarios de Productos de PTM
       </Typography>
 
-      <Button
-        variant="contained"
-        startIcon={<Add />}
-        onClick={() => setOpenForm(true)}
-        sx={{ mb: 3 }}
-      >
-        Nuevo Producto
-      </Button>
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        Valor Total del Inventario: ${totalInventario.toFixed(2)}
+      </Typography>
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        Producto con Mayor Valor: {productoMayorValor.nombre} ($
+        {(productoMayorValor.precio * productoMayorValor.cantidadStock).toFixed(
+          2
+        )}
+        )
+      </Typography>
 
+      <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
+        <Button
+          variant="contained"
+          startIcon={<Add />}
+          onClick={() => setOpenForm(true)}
+        >
+          Nuevo Producto
+        </Button>
+
+        <Button
+          variant="outlined"
+          startIcon={<Search />}
+          onClick={() => router.push("/combinaciones")}
+        >
+          Buscar Combinaciones
+        </Button>
+      </Box>
       <ProductTable
         products={products}
         loading={loading}

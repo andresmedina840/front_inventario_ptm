@@ -70,8 +70,8 @@ export default function ProductTable({
                 <TableCell>{product.nombre}</TableCell>
                 <TableCell>{product.codigoBarras}</TableCell>
                 <TableCell>{product.descripcion}</TableCell>
-                <TableCell>${product.precio}</TableCell>
-                <TableCell>{product.cantidadStock}</TableCell>
+                <TableCell align="right">${product.precio}</TableCell>
+                <TableCell align="right">{product.cantidadStock}</TableCell>
                 <TableCell>
                   <Button
                     color="primary"

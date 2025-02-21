@@ -130,7 +130,12 @@ export default function ProductForm({
           label="Nombre del producto"
           name="nombre"
           value={formData.nombre || ""}
-          onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+          onChange={(e) => {
+            setFormData({ ...formData, nombre: e.target.value });
+            if (errors.nombre) {
+              setErrors({ ...errors, nombre: "" });
+            }
+          }}
           helperText={
             errors.nombre || `${(formData.nombre || "").length} / 50 caracteres`
           }
@@ -148,9 +153,12 @@ export default function ProductForm({
           label="Codigo de barras del producto"
           name="codigoBarras"
           value={formData.codigoBarras || ""}
-          onChange={(e) =>
-            setFormData({ ...formData, codigoBarras: e.target.value })
-          }
+          onChange={(e) => {
+            setFormData({ ...formData, codigoBarras: e.target.value });
+            if (errors.codigoBarras) {
+              setErrors({ ...errors, codigoBarras: "" });
+            }
+          }}
           helperText={
             errors.codigoBarras ||
             `${(formData.codigoBarras || "").length} / 50 caracteres`
@@ -190,13 +198,17 @@ export default function ProductForm({
             value={formData.precio.toString()}
             onChange={(e) => {
               const newValue = e.target.value
-                .replace(/[^0-9]/g, "") // Solo números
-                .slice(0, 15); // Máximo 15dígitos
+                .replace(/[^0-9]/g, "")
+                .slice(0, 15);
               if (/^\d*$/.test(newValue)) {
                 setFormData({
                   ...formData,
                   precio: newValue === "" ? 0 : parseInt(newValue),
                 });
+
+                if (errors.precio) {
+                  setErrors({});
+                }
               }
             }}
             error={!!errors.precio}
@@ -220,8 +232,8 @@ export default function ProductForm({
             value={formData.cantidadStock.toString()}
             onChange={(e) => {
               const newValue = e.target.value
-                .replace(/[^0-9]/g, "") // Solo números
-                .slice(0, 6); // Máximo 6 dígitos
+                .replace(/[^0-9]/g, "")
+                .slice(0, 4);
               if (/^\d*$/.test(newValue)) {
                 setFormData({
                   ...formData,
@@ -232,7 +244,7 @@ export default function ProductForm({
             error={!!errors.cantidadStock}
             helperText={
               errors.cantidadStock ||
-              `${formData.cantidadStock.toString().length} / 6 caracteres`
+              `${formData.cantidadStock.toString().length} / 4 caracteres`
             }
             slotProps={{
               htmlInput: {
