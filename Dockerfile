@@ -1,36 +1,32 @@
 # Etapa de construcción
-FROM node:18-alpine AS builder
+FROM node:18-alpine AS build
 
+# Establece el directorio de trabajo en /app
 WORKDIR /app
 
-# Instalar dependencias de construcción
-RUN apk add --no-cache git python3 make g++
-
-# Cachear dependencias
+# Copia los archivos de package.json y package-lock.json a /app
 COPY package*.json ./
-RUN npm ci --prefer-offline --no-audit
 
-# Copiar y construir aplicación
+# Instala las dependencias
+RUN npm install --force
+
+# Copia el resto de los archivos al directorio de trabajo en el contenedor
 COPY . .
+
+# Construye la aplicación Next.js
 RUN npm run build
 
 # Etapa de producción
-FROM node:18-alpine
+FROM node:18-alpine AS production
 
+# Establece el directorio de trabajo en /app
 WORKDIR /app
 
-# Copiar solo lo necesario
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public 
+# Copia el resultado de la compilación desde la etapa de construcción
+COPY --from=build /app /app
 
-# Instalar solo producción
-RUN npm ci --omit=dev --prefer-offline --no-audit
-
-# Configuración de seguridad
-RUN apk add --no-cache tini
-ENTRYPOINT ["/sbin/tini", "--"]
-
+# Exponer el puerto 3000
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# Comando de inicio del contenedor para ejecutar la aplicación Next.js en producción
+CMD ["npm", "run", "start"]

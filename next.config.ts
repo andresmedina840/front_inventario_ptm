@@ -1,15 +1,25 @@
-import type { NextConfig } from "next";
+// next.config.js
+const nextConfig = {
+  // Configuración para el directorio app (Next.js 13+)
+  appDir: true, // ✅ Ya no está en "experimental"
 
-const nextConfig: NextConfig = {
+  // Optimizaciones para MUI y styled-components
+  compiler: {
+    styledComponents: true
+  },
+
+  // Configuración para Docker
+  output: "standalone",
+
+  // Configuraciones experimentales específicas
   experimental: {
     serverActions: {
-      bodySizeLimit: "2mb", 
+      bodySizeLimit: "2mb",
       allowedOrigins: [
-        "localhost:3000", 
+        "localhost:3000",
+        process.env.NEXT_PUBLIC_API_URL
       ]
     },
-    
-    // Otras configuraciones experimentales
     optimizePackageImports: ["@mui/material", "@mui/icons-material"]
   }
 };
