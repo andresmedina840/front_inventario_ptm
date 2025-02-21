@@ -105,12 +105,24 @@ export default function ProductCRUDPage() {
 
   return (
     <Box sx={{ p: 3, maxWidth: 1200, margin: "0 auto" }}>
-       <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 4 }}>
-        
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          mb: 4,
+        }}
+      >
         <Typography variant="h4" gutterBottom align="center">
           Gestión de Inventarios de Productos de PTM
         </Typography>
-        <Image src="/Logo_COMERCIAL-CARD.png" alt="Logo Comercial" width={400} height={150} />
+        <Image
+          src="/Logo_COMERCIAL-CARD.png"
+          alt="Logo Comercial"
+          width={400}
+          height={150}
+          priority
+        />
       </Box>
 
       <Typography variant="h6" sx={{ mb: 2 }}>

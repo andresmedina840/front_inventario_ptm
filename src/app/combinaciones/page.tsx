@@ -104,6 +104,7 @@ export default function CombinacionesPage() {
           alt="Logo Comercial"
           width={400}
           height={150}
+          priority
         />
       </Box>
 
