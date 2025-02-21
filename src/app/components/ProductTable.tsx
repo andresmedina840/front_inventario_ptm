@@ -28,9 +28,8 @@ export default function ProductTable({
 
   const productList = Array.isArray(products) ? products : [];
 
-
   const sortedProducts = [...productList].sort((a, b) => {
-    console.log('Products received ordenados:', productList);
+    //console.log('Products received ordenados:', productList);
     if (a[orderBy] < b[orderBy]) return order === 'asc' ? -1 : 1;
     if (a[orderBy] > b[orderBy]) return order === 'asc' ? 1 : -1;
     return 0;

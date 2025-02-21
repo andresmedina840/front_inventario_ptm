@@ -18,6 +18,7 @@ import {
 import axiosClient from "../axios/axiosClient";
 import { useRouter } from "next/navigation";
 import CustomTextField from "../components/personalizados/CustomTextField";
+import Image from "next/image";
 
 export default function CombinacionesPage() {
   const [formData, setFormData] = useState({ precio: 0 });
@@ -35,7 +36,6 @@ export default function CombinacionesPage() {
           "https://meowfacts.herokuapp.com/?count=2&lang=esp"
         );
         const data = await response.json();
-        console.log("informacion gatos: ", data);
         setCatFacts(data.data);
         setOpenDialog(true);
       } catch (error) {
@@ -49,7 +49,6 @@ export default function CombinacionesPage() {
           "https://uselessfacts.jsph.pl/api/v2/facts/today?language=en"
         );
         const data = await response.json();
-        console.log("informacion otra - text: ", data.text);
         setUselessFact(data.text);
       } catch (error) {
         console.error("Error obteniendo el dato inútil del día", error);
@@ -72,12 +71,12 @@ export default function CombinacionesPage() {
       );
       setCombinaciones(response.data.data);
     } catch (err) {
-      setErrors({ precio: "Error al obtener combinaciones" });
+      setErrors({ precio: `Error al obtener combinaciones ${err}` });
     }
   };
 
   return (
-    <Box sx={{ p: 3, maxWidth: 800, margin: "0 auto" }}>
+    <Box sx={{ p: 3, maxWidth: 1200, margin: "0 auto" }}>
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Sabías que...</DialogTitle>
         <DialogContent>
@@ -89,9 +88,24 @@ export default function CombinacionesPage() {
         </DialogContent>
       </Dialog>
 
-      <Typography variant="h4" gutterBottom>
-        Buscar Combinaciones de Productos
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          mb: 4,
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          Buscar Combinaciones de Productos
+        </Typography>
+        <Image
+          src="/Logo_COMERCIAL-CARD.png"
+          alt="Logo Comercial"
+          width={400}
+          height={150}
+        />
+      </Box>
 
       <CustomTextField
         name="precio"
@@ -107,7 +121,7 @@ export default function CombinacionesPage() {
             });
 
             if (errors.precio) {
-              setErrors({}); 
+              setErrors({});
             }
           }
         }}

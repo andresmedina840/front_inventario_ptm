@@ -1,0 +1,21 @@
+name: Local Docker Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-run:
+    runs-on: self-hosted # Ejecuta en tu propio servidor/local
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build Docker image
+      run: docker build -t inventarioptm:latest .
+
+    - name: Deploy with Docker Compose
+      run: |
+        docker-compose down
+        docker-compose up -d

@@ -7,7 +7,6 @@ import {
   DialogActions,
   Button,
   Box,
-  FormHelperText,
 } from "@mui/material";
 import axiosClient from "../axios/axiosClient";
 import { ApiResponse, Product } from "./../types";
@@ -106,7 +105,7 @@ export default function ProductForm({
       onSuccess(updatedProduct, !!product);
       onClose();
     } catch (error) {
-      showSnackbar("Error guardando producto", "error");
+      showSnackbar(`Error guardando producto ${error}`, "error");
     }
   };
 

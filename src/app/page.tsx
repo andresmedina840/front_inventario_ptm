@@ -14,6 +14,7 @@ import axiosClient from "./axios/axiosClient";
 import ProductForm from "./components/ProductForm";
 import ProductTable from "./components/ProductTable";
 import { Product } from "./types";
+import Image from "next/image";
 
 export default function ProductCRUDPage() {
   const router = useRouter();
@@ -50,7 +51,7 @@ export default function ProductCRUDPage() {
         }));
         setProducts(productsWithNumberId);
       } catch (error) {
-        showSnackbar("Error cargando productos", "error");
+        showSnackbar(`Error cargando productos ${error}`, "error");
       } finally {
         setLoading(false);
       }
@@ -76,7 +77,7 @@ export default function ProductCRUDPage() {
         showSnackbar(response.data.message, "success");
       }
     } catch (error) {
-      showSnackbar("Error eliminando producto", "error");
+      showSnackbar(`Error eliminando producto ${error}`, "error");
     }
   };
 
@@ -104,9 +105,13 @@ export default function ProductCRUDPage() {
 
   return (
     <Box sx={{ p: 3, maxWidth: 1200, margin: "0 auto" }}>
-      <Typography variant="h4" gutterBottom sx={{ mb: 4 }} align="center">
-        Gestión de Inventarios de Productos de PTM
-      </Typography>
+       <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 4 }}>
+        
+        <Typography variant="h4" gutterBottom align="center">
+          Gestión de Inventarios de Productos de PTM
+        </Typography>
+        <Image src="/Logo_COMERCIAL-CARD.png" alt="Logo Comercial" width={400} height={150} />
+      </Box>
 
       <Typography variant="h6" sx={{ mb: 2 }}>
         Valor Total del Inventario: ${totalInventario.toFixed(2)}
