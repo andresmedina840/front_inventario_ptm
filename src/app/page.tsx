@@ -140,7 +140,10 @@ export default function ProductCRUDPage() {
         <Button
           variant="contained"
           startIcon={<Add />}
-          onClick={() => setOpenForm(true)}
+          onClick={() => {
+            setSelectedProduct(null);
+            setOpenForm(true);
+          }}
         >
           Nuevo Producto
         </Button>

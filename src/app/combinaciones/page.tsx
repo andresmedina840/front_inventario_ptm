@@ -69,6 +69,7 @@ export default function CombinacionesPage() {
       const response = await axiosClient.get(
         `/productos/combinaciones/${formData.precio}`
       );
+      console.log("fsfsfdsf: ", response.data.data);
       setCombinaciones(response.data.data);
     } catch (err) {
       setErrors({ precio: `Error al obtener combinaciones ${err}` });

@@ -54,7 +54,7 @@ export default function ProductForm({
         cantidadStock: 0,
       });
     }
-  }, [product]);
+  }, [product, open]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
